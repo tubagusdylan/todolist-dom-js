@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TodoList</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="background">
+      <div id="container">
+        <div class="title">
+          <h1>TODO</h1>
+        </div>
+        <div class="input">
+          <input type="text" id="add-todo" name="todo" placeholder="Mau ngapain hari ini?" />
+          <input type="button" id="add" value="Add" />
+        </div>
+        <div class="filter">
+          <label>Filter:</label>
+          <input type="text" class="filter-input" />
+        </div>
+        <div class="list-todo">
+          <div class="todo">
+            <input type="button" value="Done" id="done-btn" />
+            <span>Todo Description</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Buat variabel untuk menyimpan todolistnya
+      const todoList = [];
+      console.log(todoList.length);
+
+      // Clear todolist
+      function clearTodoList() {
+        const listTodo = document.querySelector(".list-todo");
+
+        // Style
+        if (todoList.length === 0) {
+          listTodo.style.boxShadow = "none";
+        } else {
+          listTodo.style.boxShadow = "1px 1px 5px 1px grey";
+        }
+
+        while (listTodo.firstChild) {
+          listTodo.removeChild(listTodo.firstChild);
+        }
+      }
+
+      function removeTodoList(index) {
+        todoList.splice(index, 1);
+        displayTodoList();
+      }
+
+      function addTodoList(todo, index) {
+        const div = document.createElement("div");
+        div.className = "todo";
+
+        const buttonDone = document.createElement("input");
+        buttonDone.type = "button";
+        buttonDone.value = "Done";
+        buttonDone.id = "done-btn";
+        buttonDone.onclick = () => {
+          removeTodoList(index);
+        };
+        div.appendChild(buttonDone);
+
+        const valueTodo = document.createElement("span");
+        valueTodo.textContent = todo;
+        div.appendChild(valueTodo);
+
+        const listTodo = document.querySelector(".list-todo");
+        listTodo.appendChild(div);
+      }
+
+      // Menampilkan Todo
+      function displayTodoList() {
+        clearTodoList();
+        for (let i = 0; i < todoList.length; i++) {
+          const todo = todoList[i];
+          // Search todo
+          const searchText = document.querySelector(".filter-input").value.toLowerCase();
+
+          if (todo.toLowerCase().includes(searchText)) {
+            addTodoList(todo, i);
+          }
+        }
+      }
+
+      const addButton = document.getElementById("add");
+      addButton.onclick = (event) => {
+        event.preventDefault();
+
+        const todo = document.getElementById("add-todo").value;
+        if (todo === "") {
+          alert("Input tidak boleh kosong");
+        } else {
+          todoList.push(todo);
+          document.getElementById("add-todo").value = "";
+          displayTodoList();
+        }
+      };
+
+      // Logic input filter
+      const searchInput = document.querySelector(".filter-input");
+
+      searchInput.onkeyup = () => {
+        displayTodoList();
+      };
+
+      displayTodoList();
+    </script>
+  </body>
+</html>
